@@ -6,7 +6,7 @@ const listEl = document.querySelector('ul');
 const answersEl = document.querySelectorAll('.answer');
 const submit = document.getElementById('submit');
 
-let count = 20;
+let count = 10;
 let category = '9'; // Default is General Knowledge
 let quizNumber = 0;
 let rightCount = 0;
@@ -58,7 +58,7 @@ function submitAnswer() {
     } else {
       quiz.innerHTML = 
       `
-        <h2>You answered ${rightCount} of ${count} answers correctly.</h2>
+        <h2 style="margin-bottom: 5rem;" >You answered ${rightCount} of ${count} questions correctly.</h2>
         <button onclick="location.reload()">Reload</button>
       `;
     }
