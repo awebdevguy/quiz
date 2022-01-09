@@ -32,7 +32,7 @@ body {
 }
 
 .quiz-header {
-  padding: 4rem;
+  padding: 2rem 3rem 5rem 3rem;
 }
 
 .score, .select{
