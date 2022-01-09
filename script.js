@@ -1,46 +1,35 @@
 const quizHeader = document.querySelector('.quiz-header');
+const selectEl = document.getElementById('select');
 const scoreEl = document.getElementById('score');
 const questionEl = document.getElementById('question');
+const listEl = document.querySelector('ul');
 const answersEl = document.querySelectorAll('.answer');
 const submit = document.getElementById('submit');
 
-const count = 10;
+let count = 10;
+let category = '9'; // Default is General Knowledge
 let quizNumber = 0;
 let rightCount = 0;
-let correctAnswer;
+let correctAnswer = '';
 let data = {};
+let sessionToken = '';
 
-startQuiz();
+let url = `https://opentdb.com/api.php?amount=${count}&category=${category}`;
 
-async function startQuiz() {
+
+loadApp();
+
+async function loadApp() {
+  sessionToken = await fetchSessionToken();
+  startQuiz(url + `&token=${sessionToken}`);
+}
+
+async function startQuiz(url) {
 
   scoreEl.innerHTML = `Score: ${rightCount}/${quizNumber} Total: ${count}`;
-  data = await fetchData();
+  data = await fetchData(url);
+  console.log(data);
   presentQuiz(data[0]);
-
-  answersEl.forEach(ans => {
-
-    ans.addEventListener('change', (e) => {
-      e.preventDefault();
-    
-      answersEl.forEach(item => {
-        if(item.labels[0].innerText.trim() === correctAnswer.trim()) {
-          item.labels[0].style.color = 'green';
-        }
-      });
-    
-      if(e.target.checked) {
-        if(ans.labels[0].innerText.trim() === correctAnswer.trim()) {
-          ans.labels[0].style.color = 'green';
-          rightCount++;
-        } else {
-          ans.labels[0].style.color = 'red';
-        }
-      }
-      quizNumber++;
-      scoreEl.innerHTML = `Score: ${rightCount}/${quizNumber} Total: ${count}`;
-    }, false);
-  });
 }
 
 
@@ -77,6 +66,7 @@ function submitAnswer() {
 function presentQuiz(quiz) {
 
   resetAnswers();
+  enableList();
 
   const { question, correct_answer: right, incorrect_answers: wrongs } = quiz;
   const answers = wrongs;
@@ -96,18 +86,46 @@ function presentQuiz(quiz) {
   correctAnswer = decodeHTMLChars(right);
 }
 
-
-async function fetchData() {
-
-  const url = `https://opentdb.com/api.php?amount=${count}&category=18`;
+async function fetchSessionToken() {
+    // const url = `https://opentdb.com/api.php?amount=${count}&category=9`;
   const resp = await fetch('https://opentdb.com/api_token.php?command=request');
-  const token = await resp.json();
-  const res = await fetch(url + `&token=${token.token}`);
-  const {results} = await res.json();
+  const data = await resp.json();
+  const {sessionToken: token} = data;
+  console.log(data.token);
+  console.log(sessionToken);
 
-  return results;
+  return data.token;
 }
 
+
+async function fetchData(url) {
+  const res = await fetch(url);
+  const {results} = await res.json();
+  return await results;
+}
+
+function handleAnswerSelection(e) {
+
+  e.preventDefault();
+  disableList();
+
+  const targetText = e.target.labels[0].innerText.trim();
+
+  answersEl.forEach(item => {
+    const labelText = item.labels[0].innerText.trim();
+
+    if(labelText === correctAnswer) {
+      item.labels[0].style.color = 'green';
+      if(targetText === correctAnswer) {
+        rightCount++;
+      }
+    } else {
+      item.labels[0].style.color = 'red';
+    }
+  });
+  quizNumber++;
+  scoreEl.innerHTML = `Score: ${rightCount}/${quizNumber} Total: ${count}`;
+}
 
 function shuffle(array) {
 
@@ -134,6 +152,15 @@ function decodeHTMLChars(str) {
   return txt.value
 }
 
+function disableList() {
+  submit.classList.remove('disable');
+  listEl.classList.add('disable');
+}
+
+function enableList() {
+  submit.classList.add('disable');
+  listEl.classList.remove('disable');
+}
 
 function resetAnswers(){
   answersEl.forEach(ans => {
@@ -142,4 +169,27 @@ function resetAnswers(){
   })
 }
 
+function chooseCategory(e) {
+  e.preventDefault();
+
+  quizNumber = 0;
+  rightCount = 0;
+  correctAnswer = '';
+  data = {};
+  category = e.target.value;
+  url = `https://opentdb.com/api.php?amount=${count}&category=${category}`;
+  startQuiz(url + `&token=${sessionToken}`);
+  console.log(category);
+}
+
+selectEl.addEventListener('change', chooseCategory);
 submit.addEventListener('click', submitAnswer);
+
+const addRadioEventListeners = () => {
+  answersEl.forEach(answer => {
+    answer.addEventListener('change', (e) => {
+      handleAnswerSelection(e);
+    });
+  });
+}
+addRadioEventListeners();
