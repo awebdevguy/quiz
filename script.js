@@ -6,7 +6,7 @@ const listEl = document.querySelector('ul');
 const answersEl = document.querySelectorAll('.answer');
 const submit = document.getElementById('submit');
 
-let count = 10;
+let count = 20;
 let category = '9'; // Default is General Knowledge
 let quizNumber = 0;
 let rightCount = 0;
@@ -14,18 +14,22 @@ let correctAnswer = '';
 let data = {};
 let sessionToken = '';
 
-let url = `https://opentdb.com/api.php?amount=${count}&category=${category}`;
-
+let url = `https://opentdb.com/api.php?amount=${count}`;
 
 loadApp();
 
+
 async function loadApp() {
+  const storedCategory = localStorage.getItem('category');
+  category = storedCategory ? storedCategory : '9';
+  selectEl.value = category;
   sessionToken = await fetchSessionToken();
-  startQuiz(url + `&token=${sessionToken}`);
+  startQuiz(url + `&category=${category}&token=${sessionToken}`);
+  console.log(sessionToken);
 }
 
-async function startQuiz(url) {
 
+async function startQuiz(url) {
   scoreEl.innerHTML = `Score: ${rightCount}/${quizNumber} Total: ${count}`;
   data = await fetchData(url);
   console.log(data);
@@ -46,7 +50,6 @@ function getSelected() {
 
 
 function submitAnswer() {
-
   const selected = getSelected();
   
   if(selected) {
@@ -64,7 +67,6 @@ function submitAnswer() {
 
 
 function presentQuiz(quiz) {
-
   resetAnswers();
   enableList();
 
@@ -82,12 +84,11 @@ function presentQuiz(quiz) {
       answer.labels[0].innerHTML = shuffled[idx];
     }
   });
-
   correctAnswer = decodeHTMLChars(right);
 }
 
+
 async function fetchSessionToken() {
-    // const url = `https://opentdb.com/api.php?amount=${count}&category=9`;
   const resp = await fetch('https://opentdb.com/api_token.php?command=request');
   const data = await resp.json();
   const {sessionToken: token} = data;
@@ -104,8 +105,8 @@ async function fetchData(url) {
   return await results;
 }
 
-function handleAnswerSelection(e) {
 
+function handleAnswerSelection(e) {
   e.preventDefault();
   disableList();
 
@@ -127,8 +128,8 @@ function handleAnswerSelection(e) {
   scoreEl.innerHTML = `Score: ${rightCount}/${quizNumber} Total: ${count}`;
 }
 
-function shuffle(array) {
 
+function shuffle(array) {
   let currentIndex = array.length,  randomIndex;
 
   // While there remain elements to shuffle...
@@ -152,26 +153,29 @@ function decodeHTMLChars(str) {
   return txt.value
 }
 
+
 function disableList() {
   submit.classList.remove('disable');
   listEl.classList.add('disable');
 }
+
 
 function enableList() {
   submit.classList.add('disable');
   listEl.classList.remove('disable');
 }
 
+
 function resetAnswers(){
   answersEl.forEach(ans => {
     ans.checked = false;
     ans.labels[0].style.color = null;
-  })
+  });
 }
+
 
 function chooseCategory(e) {
   e.preventDefault();
-
   quizNumber = 0;
   rightCount = 0;
   correctAnswer = '';
@@ -179,8 +183,10 @@ function chooseCategory(e) {
   category = e.target.value;
   url = `https://opentdb.com/api.php?amount=${count}&category=${category}`;
   startQuiz(url + `&token=${sessionToken}`);
+  localStorage.setItem('category', category);
   console.log(category);
 }
+
 
 selectEl.addEventListener('change', chooseCategory);
 submit.addEventListener('click', submitAnswer);
@@ -192,4 +198,5 @@ const addRadioEventListeners = () => {
     });
   });
 }
+
 addRadioEventListeners();

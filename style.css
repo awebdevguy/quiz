@@ -22,10 +22,13 @@ body {
 
 .quiz-container {
   background-color: #ffffff;
+  border: 2px solid #732d91;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(100,100,100,0.1);
   width: 600px;
+  min-width: 300px;
   overflow: hidden;
+  position: relative;
 }
 
 .quiz-header {
@@ -47,6 +50,9 @@ body {
 .select {
   font-size: 1rem;
   text-align: start;
+  border: 2px solid #732d91;
+  outline: none;
+  margin: 1rem auto;
 }
 
 h2 {
@@ -78,6 +84,8 @@ button {
   font-size: 1.1rem;
   font-family: inherit;
   padding: 1.3rem;
+  position: absolute;
+  bottom: 0;
 }
 
 button:hover {
@@ -87,4 +95,35 @@ button:hover {
 button:focus {
   outline: none;
   background-color: #5e3379;
+}
+
+@media(max-width: 400px) {
+  .quiz-container {
+    height: 100%;
+  }
+
+  .quiz-header {
+    padding: 2rem;
+  }
+
+  h2 {
+    padding: .5rem;
+    font-size: 1.2rem;
+  }
+
+  button {
+    padding: 1rem;
+  }
+}
+
+@media screen and (min-width: 320px) and (max-width: 400px) and (orientation: landscape) {
+  html {
+    transform: rotate(-90deg);
+    transform-origin: left top;
+    width: 100vh;
+    overflow-x: hidden;
+    position: absolute;
+    top: 100%;
+    left: 0;
+  }
 }

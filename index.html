@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="ScreenOrientation" content="autoRotate:disabled">
     <title>Quiz</title>
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="style.css">
@@ -11,6 +12,7 @@
   <body>
     <div class="quiz-container" id="quiz">
       <div class="quiz-header">
+        <div class="score" id="score"></div>
         <select name="categories" id="select" class="select">
           <option id="9" value="9">General Knowledge</option>
           <optgroup label="Entertainment">
@@ -41,7 +43,6 @@
           <option id="27" value="27">Animals</option>
           <option id="28" value="28">Vehicles</option>
         </select>
-        <div class="score" id="score"></div>
         <h2 id="question"></h2>
         <ul>
           <li>
