@@ -99,7 +99,7 @@ button:focus {
 
 @media(max-width: 400px) {
   .quiz-container {
-    height: 100%;
+    height: 100vh;
   }
 
   .quiz-header {
