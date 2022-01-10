@@ -1,3 +1,4 @@
+// const quizContainer = documentl.getElementById('quiz-container');
 const quizHeader = document.querySelector('.quiz-header');
 const selectEl = document.getElementById('select');
 const scoreEl = document.getElementById('score');
@@ -5,6 +6,7 @@ const questionEl = document.getElementById('question');
 const listEl = document.querySelector('ul');
 const answersEl = document.querySelectorAll('.answer');
 const submit = document.getElementById('submit');
+// quizContainer.contents().filter(function () { return this.nodeType === 12 }).remove();
 
 let count = 10;
 let category = '9'; // Default is General Knowledge
@@ -58,8 +60,8 @@ function submitAnswer() {
     } else {
       quiz.innerHTML = 
       `
-        <h2 style="margin-bottom: 5rem;" >You answered ${rightCount} of ${count} questions correctly.</h2>
-        <button onclick="location.reload()">Reload</button>
+        <h2 style="padding: 5rem 0; text-align: center;" >You answered ${rightCount} of ${count} questions correctly.</h2>
+        <button onclick="location.reload()">Re-Start</button>
       `;
     }
   }
