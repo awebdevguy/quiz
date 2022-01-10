@@ -1,4 +1,3 @@
-// const quizContainer = documentl.getElementById('quiz-container');
 const quizHeader = document.querySelector('.quiz-header');
 const selectEl = document.getElementById('select');
 const scoreEl = document.getElementById('score');
@@ -6,7 +5,6 @@ const questionEl = document.getElementById('question');
 const listEl = document.querySelector('ul');
 const answersEl = document.querySelectorAll('.answer');
 const submit = document.getElementById('submit');
-// quizContainer.contents().filter(function () { return this.nodeType === 12 }).remove();
 
 let count = 10;
 let category = '9'; // Default is General Knowledge
